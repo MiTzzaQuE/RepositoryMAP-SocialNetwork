@@ -14,6 +14,13 @@ public class UserDbRepository implements Repository<Long, User> {
     private final String password;
     private final Validator<User> validator;
 
+    /**
+     *
+     * @param url -String
+     * @param username -String
+     * @param password -String
+     * @param validator -Validator
+     */
     public UserDbRepository(String url, String username, String password, Validator<User> validator) {
         this.url = url;
         this.username = username;
