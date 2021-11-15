@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * FriendshipDbRepository repository class
+ */
+
 public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Friendship> {
     private final String url;
     private final String username;
