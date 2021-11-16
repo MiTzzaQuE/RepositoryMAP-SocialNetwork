@@ -8,6 +8,11 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * DataBase user repository made for sql use
+ * implements the base interface Repository
+ * contains objects of type Long and User
+ */
 public class UserDbRepository implements Repository<Long, User> {
     private final String url;
     private final String username;
@@ -15,7 +20,7 @@ public class UserDbRepository implements Repository<Long, User> {
     private final Validator<User> validator;
 
     /**
-     *
+     * Public constructor for the UserDataBase Repository
      * @param url -String
      * @param username -String
      * @param password -String

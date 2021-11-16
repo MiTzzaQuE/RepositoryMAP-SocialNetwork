@@ -45,8 +45,6 @@ public class ServiceFriendship {
                     friendship.setId(t);
                     friendship.setDate(LocalDateTime.now());
                     Friendship response = repoFriends.save(friendship);
-//                    u1.addFriend(u2);
-//                    u2.addFriend(u1);
                     if (response != null)
                         throw new ValidationException("Friendship already made!");
                 }
@@ -83,8 +81,6 @@ public class ServiceFriendship {
         Entity save = repoFriends.delete(t);
         if (save == null)
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 : ids are not used in a friendship");
-//        repoUser.findOne(id1).deleteFriend(repoUser.findOne(id2));
-//        repoUser.findOne(id2).deleteFriend(repoUser.findOne(id1));
     }
 
     /**
