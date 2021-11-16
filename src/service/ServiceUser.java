@@ -25,20 +25,8 @@ public class ServiceUser {
     public ServiceUser(Repository<Long, User> RepoUser, Repository<Tuple<Long, Long>, Friendship> RepoFriends) {
         repoFriends = RepoFriends;
         repoUser = RepoUser;
-//        friends_list();
     }
 
-//    /**
-//     * method called in constructor to add the friends for users
-//     */
-//    private void friends_list() {
-//        for (Friendship fr : repoFriends.findAll()) {
-//            User u1 = repoUser.findOne(fr.getId().getLeft());
-//            User u2 = repoUser.findOne(fr.getId().getRight());
-//            u1.addFriend(u2);
-//            u2.addFriend(u1);
-//        }
-//    }
 
     /**
      * save a user, call the repo function
@@ -85,21 +73,6 @@ public class ServiceUser {
         if (deleted == null)
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
                     ": id invalid!");
-
-//        ArrayList<Friendship> copy = new ArrayList<>((Collection<? extends Friendship>) repoFriends.findAll());
-
-//        for (Friendship fr : copy) {
-//            if (Objects.equals(fr.getId().getLeft(), id) || Objects.equals(fr.getId().getRight(), id))
-//                repoFriends.delete(fr.getId());
-//        }
-//        for(User ur : repoUser.findAll()){
-//            ArrayList<User> copyFriends = new ArrayList<>(ur.getFriends());
-//            for(User user : copyFriends){
-//                if(user == deleted){
-//                    ur.deleteFriend(user);
-//                }
-//            }
-//        }
         return deleted;
     }
 

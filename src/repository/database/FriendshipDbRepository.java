@@ -11,7 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * FriendshipDbRepository repository class
+ * DataBase friendship repository made for sql use
+ * implements the base interface Repository
+ * contains objects of type Tuple of (Long,Long) and Friendship
  */
 
 public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Friendship> {
@@ -20,6 +22,13 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
     private final String password;
     private final Validator<Friendship> validator;
 
+    /**
+     * Public constructor for the FriendshipDataBase Repository
+     * @param url
+     * @param username
+     * @param password
+     * @param validator
+     */
     public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
         this.url = url;
         this.username = username;
