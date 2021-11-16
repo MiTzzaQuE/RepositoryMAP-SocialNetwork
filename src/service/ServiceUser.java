@@ -86,12 +86,12 @@ public class ServiceUser {
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
                     ": id invalid!");
 
-        ArrayList<Friendship> copy = new ArrayList<>((Collection<? extends Friendship>) repoFriends.findAll());
+//        ArrayList<Friendship> copy = new ArrayList<>((Collection<? extends Friendship>) repoFriends.findAll());
 
-        for (Friendship fr : copy) {
-            if (Objects.equals(fr.getId().getLeft(), id) || Objects.equals(fr.getId().getRight(), id))
-                repoFriends.delete(fr.getId());
-        }
+//        for (Friendship fr : copy) {
+//            if (Objects.equals(fr.getId().getLeft(), id) || Objects.equals(fr.getId().getRight(), id))
+//                repoFriends.delete(fr.getId());
+//        }
 //        for(User ur : repoUser.findAll()){
 //            ArrayList<User> copyFriends = new ArrayList<>(ur.getFriends());
 //            for(User user : copyFriends){
