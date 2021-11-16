@@ -32,26 +32,10 @@ public class UI {
     public void show() {
         String cmd;
         Scanner scanner = new Scanner(System.in);
+        show_menu();
 
         while (true) {
-            System.out.println("""
-                    --------------------
-                    █▀▄▀█ █▀▀ █▄░█ █░█
-                    █░▀░█ ██▄ █░▀█ █▄█
-                    --------------------""");
-            System.out.println("""
-                    (1)-Add user
-                    (2)-Update user
-                    (3)-Delete user
-                    (4)-Add a friendship
-                    (5)-Delete a friendship
-                    (6)-Print the number of communities
-                    (7)-Biggest community
-                    (8)-Print users
-                    (9)-Print friendships
-                    (10)-Print user friends
-                    (x)-Exit
-                    Your input:""");
+            System.out.println("\nYour input: ");
             cmd = scanner.nextLine();
             if (Objects.equals(cmd, "x")) {
                 System.out.println("Sayonara Suka!");
@@ -61,12 +45,34 @@ public class UI {
         }
     }
 
+    private void show_menu() {
+        System.out.println("""
+                --------------------
+                █▀▄▀█ █▀▀ █▄░█ █░█
+                █░▀░█ ██▄ █░▀█ █▄█
+                --------------------""");
+        System.out.println("""
+                (0)-Menu
+                (1)-Add user
+                (2)-Update user
+                (3)-Delete user
+                (4)-Add a friendship
+                (5)-Delete a friendship
+                (6)-Print the number of communities
+                (7)-Biggest community
+                (8)-Print users
+                (9)-Print friendships
+                (10)-Print user friends
+                (x)-Exit""");
+    }
+
     /**
      * select the command chosen
      * @param cmd-String
      */
     public void menu(String cmd) {
         switch (cmd) {
+            case "0" -> show_menu();
             case "1" -> adduser();
             case "2" -> updateuser();
             case "3" -> deleteuser();

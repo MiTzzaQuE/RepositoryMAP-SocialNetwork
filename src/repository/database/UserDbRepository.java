@@ -21,10 +21,10 @@ public class UserDbRepository implements Repository<Long, User> {
 
     /**
      * Public constructor for the UserDataBase Repository
-     * @param url -String
-     * @param username -String
-     * @param password -String
-     * @param validator -Validator
+     * @param url - String
+     * @param username - String
+     * @param password - String
+     * @param validator - Validator
      */
     public UserDbRepository(String url, String username, String password, Validator<User> validator) {
         this.url = url;

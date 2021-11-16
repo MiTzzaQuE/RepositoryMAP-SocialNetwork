@@ -24,10 +24,10 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
 
     /**
      * Public constructor for the FriendshipDataBase Repository
-     * @param url
-     * @param username
-     * @param password
-     * @param validator
+     * @param url - String
+     * @param username - String
+     * @param password - String
+     * @param validator - Validator
      */
     public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
         this.url = url;

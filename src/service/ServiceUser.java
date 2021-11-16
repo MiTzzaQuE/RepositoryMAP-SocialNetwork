@@ -54,7 +54,6 @@ public class ServiceUser {
     public void update(Long id, String firstname, String lastname) {
         User user = new User(firstname, lastname);
         user.setId(id);
-//        user.setFriends(repoUser.findOne(id).getFriends());
         User save = repoUser.update(user);
         if (save != null)
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
