@@ -4,6 +4,7 @@ import domain.*;
 import domain.validation.ValidationException;
 import repository.Repository;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
  * class Service
@@ -134,7 +135,8 @@ public class ServiceUser {
     /**
      *
      */
-    public Iterable<User> getFriendsForUser(Long id){
-        return null;
+    public Iterable<UserFriendDTO> findFriendshipsByMounth(Long id, String mounth){
+        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+                .filter(friendship -> friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id) && friendship.getDate())
     }
 }
