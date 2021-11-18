@@ -6,6 +6,7 @@ import service.Network;
 import domain.validation.ValidationException;
 import service.ServiceFriendship;
 import service.ServiceUser;
+import utils.Months;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -64,6 +65,7 @@ public class UI {
                 (8)-Print users
                 (9)-Print friendships
                 (10)-Print user friends
+                (11)-Print user friends made on a specific month
                 (x)-Exit""");
     }
 
@@ -84,6 +86,7 @@ public class UI {
             case "8" -> printUsers();
             case "9" -> printFriendships();
             case "10" -> getUserFriendsUI();
+            case "11" -> getUserFriendsByMonthUI();
             default -> System.out.println("wrong command");
         }
     }
@@ -96,7 +99,7 @@ public class UI {
 
                 █▀▀ █▀█ █ █▀▀ █▄░█ █▀▄ █▀ █░█ █ █▀█ █▀
                 █▀░ █▀▄ █ ██▄ █░▀█ █▄▀ ▄█ █▀█ █ █▀▀ ▄█:""");
-        servFriendship.printFr().forEach(x-> System.out.println(x.toString()));
+        servFriendship.printFr().forEach(x-> System.out.println(x.toString() + x.getDate().getMonth()));
     }
 
     /**
@@ -110,16 +113,41 @@ public class UI {
         servUser.printUs().forEach(x-> System.out.println(x.toString()));
     }
 
+
+    private void getUserFriendsByMonthUI(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Id of user you want to show its friends:");
+            Long id = Long.parseLong(scanner.nextLine());
+            System.out.println("Give the month when friendship was made: (CAPS LOCK ONLY!)");
+            String month = (scanner.nextLine());
+            if(servUser.findFriendshipsByMonth(id,month) == null)
+                System.out.println("User does not have friendships made on this month!");
+            else
+                for(UserFriendDTO friendDTO : servUser.findFriendshipsByMonth(id,month)){
+                    System.out.println(friendDTO);
+                }
+        } catch (IllegalArgumentException ex){
+            System.out.println("Id must be an integer number!");
+        } catch (ValidationException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /**
+     * read an id and if is valid display all friends of the user with that id
+     * otherwise, catch the exception
+     */
     private void getUserFriendsUI(){
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter user ID:");
+            System.out.println("Id of user you want to show its friends:");
             Long id = Long.parseLong(scanner.nextLine());
             for(UserFriendDTO friendDTO : servUser.getFriendsForUser(id)){
                 System.out.println(friendDTO);
             }
         } catch (IllegalArgumentException ex){
-            System.out.println("Please provide a number!");
+            System.out.println("Id must be an integer number!");
         } catch (ValidationException ex){
             System.out.println(ex.getMessage());
         }
@@ -259,28 +287,6 @@ public class UI {
             Entity deletedUser=servUser.delete(nr);
             deletedUser.toString();
             System.out.println("User " + deletedUser + " deleted successfully!");
-        }
-        catch (NumberFormatException e) {
-            System.out.println("Id must be an integer number");
-        }
-        catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * read an id and if is valid display all friends of the user with that id
-     * otherwise, catch the exception
-     */
-    private void friendsUser(){
-        Long nr;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Id of user you want to show its friends:");
-        String id = scanner.nextLine();
-        try {
-            nr = Long.parseLong(id);
-            System.out.println(servUser.findOne(nr).toString() + "\n Friends: ");
-            servUser.getFriends(nr).forEach(x -> System.out.println(x.toString()));
         }
         catch (NumberFormatException e) {
             System.out.println("Id must be an integer number");
