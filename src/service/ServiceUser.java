@@ -4,6 +4,7 @@ import domain.*;
 import domain.validation.ValidationException;
 import repository.Repository;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -139,4 +140,24 @@ public class ServiceUser {
 //        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
 //                .filter(friendship -> friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id) && friendship.getDate())
 //    }
+
+    public Iterable<UserFriendDTO> getFriendsForUser(Long id){
+
+        if(repoUser.findOne(id) == null)
+            throw new ValidationException("ID does not exist!");
+
+        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+                .filter(friendship -> friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id))
+                .map(friendship -> {
+                    User friend;
+                    if(friendship.getId().getLeft().equals(id)){
+                        friend = repoUser.findOne(friendship.getId().getRight());
+                    }
+                    else
+                        friend = repoUser.findOne(friendship.getId().getLeft());
+                    return new UserFriendDTO(friend.getFirstName(),friend.getLastName(),friendship.getDate());
+                })
+                .collect(Collectors.toList());
+
+    }
 }

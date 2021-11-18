@@ -1,14 +1,14 @@
 package domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class UserFriendDTO {
 
     private final String firtsName;
     private final String lastName;
-    private final LocalDate friendshipDate;
+    private final LocalDateTime friendshipDate;
 
-    public UserFriendDTO(String firtsName, String lastName, LocalDate friendshipDate) {
+    public UserFriendDTO(String firtsName, String lastName, LocalDateTime friendshipDate) {
         this.firtsName = firtsName;
         this.lastName = lastName;
         this.friendshipDate = friendshipDate;
@@ -16,10 +16,6 @@ public class UserFriendDTO {
 
     @Override
     public String toString() {
-        return "UserFriendDTO{" +
-                "firtsName='" + firtsName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", friendshipDate=" + friendshipDate +
-                '}';
+        return firtsName + "|" + lastName + "|" + friendshipDate;
     }
 }
