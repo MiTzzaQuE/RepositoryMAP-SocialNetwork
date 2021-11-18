@@ -135,8 +135,8 @@ public class ServiceUser {
     /**
      *
      */
-    public Iterable<UserFriendDTO> findFriendshipsByMounth(Long id, String mounth){
-        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
-                .filter(friendship -> friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id) && friendship.getDate())
-    }
+//    public Iterable<UserFriendDTO> findFriendshipsByMounth(Long id, String mounth){
+//        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+//                .filter(friendship -> friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id) && friendship.getDate())
+//    }
 }
