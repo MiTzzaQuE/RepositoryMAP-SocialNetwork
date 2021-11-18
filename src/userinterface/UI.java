@@ -1,6 +1,7 @@
 package userinterface;
 
 import domain.Entity;
+import domain.UserFriendDTO;
 import service.Network;
 import domain.validation.ValidationException;
 import service.ServiceFriendship;
@@ -82,7 +83,7 @@ public class UI {
             case "7" -> biggest_community();
             case "8" -> printUsers();
             case "9" -> printFriendships();
-            case "10" -> friendsUser();
+            case "10" -> getUserFriendsUI();
             default -> System.out.println("wrong command");
         }
     }
@@ -107,6 +108,24 @@ public class UI {
                 █░█ █▀ █▀▀ █▀█ █▀
                 █▄█ ▄█ ██▄ █▀▄ ▄█""");
         servUser.printUs().forEach(x-> System.out.println(x.toString()));
+    }
+
+    private void getUserFriendsUI(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter user ID:");
+            Long id = Long.parseLong(scanner.nextLine());
+            for(UserFriendDTO friendDTO : servUser.getFriendsForUser(id)){
+                System.out.println(friendDTO);
+            }
+        }catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }catch (IllegalArgumentException ex){
+            ex.printStackTrace();
+        }catch (ValidationException ex){
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     /**
