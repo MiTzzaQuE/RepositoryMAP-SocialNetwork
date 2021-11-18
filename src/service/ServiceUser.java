@@ -130,4 +130,11 @@ public class ServiceUser {
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81" +
                     ": id invalid!");
     }
+
+    /**
+     *
+     */
+    public Iterable<User> getFriendsForUser(Long id){
+        return null;
+    }
 }
