@@ -6,8 +6,6 @@ import domain.validation.UserValidator;
 import repository.Repository;
 import repository.database.FriendshipDbRepository;
 import repository.database.UserDbRepository;
-import repository.file.FriendshipFile;
-import repository.file.UserFile;
 import service.ServiceFriendship;
 import service.ServiceUser;
 import userinterface.UI;
