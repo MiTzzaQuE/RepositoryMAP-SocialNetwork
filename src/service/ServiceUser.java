@@ -1,9 +1,6 @@
 package service;
 
-import domain.Entity;
-import domain.Friendship;
-import domain.Tuple;
-import domain.User;
+import domain.*;
 import domain.validation.ValidationException;
 import repository.Repository;
 import java.util.*;
