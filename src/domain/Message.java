@@ -2,6 +2,7 @@ package domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Message extends Entity<Long> {
 
@@ -57,5 +58,18 @@ public class Message extends Entity<Long> {
                 ", message='" + message + '\'' +
                 ", date=" + date +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message1 = (Message) o;
+        return from.equals(message1.from) && to.equals(message1.to) && message.equals(message1.message) && date.equals(message1.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to, message, date);
     }
 }
