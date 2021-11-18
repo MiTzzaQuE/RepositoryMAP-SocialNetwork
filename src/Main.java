@@ -21,9 +21,9 @@ public class Main {
     public static void main(String[] args)
     {
         Repository<Long,User> repo =
-                new UserDbRepository("jdbc:postgresql://localhost:5432/socialnetwork","postgres","222cafe592",new UserValidator());
+                new UserDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","1234",new UserValidator());
         Repository<Tuple<Long,Long>, Friendship> repofriends =
-                new FriendshipDbRepository("jdbc:postgresql://localhost:5432/socialnetwork","postgres","222cafe592", new FriendshipValidator());
+                new FriendshipDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","1234", new FriendshipValidator());
 
         ServiceUser serv = new ServiceUser(repo,repofriends);
         ServiceFriendship servFr = new ServiceFriendship(repo,repofriends);

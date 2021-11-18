@@ -118,14 +118,11 @@ public class UI {
             for(UserFriendDTO friendDTO : servUser.getFriendsForUser(id)){
                 System.out.println(friendDTO);
             }
-        }catch (NumberFormatException ex){
-            ex.printStackTrace();
-        }catch (IllegalArgumentException ex){
-            ex.printStackTrace();
-        }catch (ValidationException ex){
+        } catch (IllegalArgumentException ex){
+            System.out.println("Please provide a number!");
+        } catch (ValidationException ex){
             System.out.println(ex.getMessage());
         }
-
     }
 
     /**
