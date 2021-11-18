@@ -1,9 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 /**
  * define a User that extends Entity
  * firstName-String
@@ -19,7 +15,6 @@ public class User extends Entity<Long> {
     /**
      * list of all user friends
      */
-    //private List<User> friends = new ArrayList<>();
 
     /**
      * constructor
@@ -47,13 +42,6 @@ public class User extends Entity<Long> {
         return lastName;
     }
 
-//    /**
-//     * getter function for user's friends
-//     * @return the list of friends for the curent user
-//     */
-//    public List<User> getFriends() {
-//        return friends;
-//    }
 
     /**
      * set the first name of an user
@@ -71,27 +59,6 @@ public class User extends Entity<Long> {
         this.lastName = lastName;
     }
 
-//    /**
-//     * setter function
-//     * @param friends new friends of the curent user
-//     */
-//    public void setFriends(List<User> friends) {
-//        this.friends = friends;
-//    }
-//
-//    /**
-//     * add a friend to the list
-//     * @param friend-User
-//     */
-//    public void addFriend(User friend) { this.friends.add(friend); }
-//
-//    /**
-//     * delete a friend from the list
-//     * @param friend-User
-//     */
-//    public void deleteFriend(User friend) {
-//        this.friends.remove(friend);
-//    }
 
     @Override
     public String toString() {
@@ -99,9 +66,6 @@ public class User extends Entity<Long> {
         s = "User{ id='" + this.getId() + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + "' }" ;
-//        for (int i = 0; i < friends.size(); i++)
-//            s = s + "|"+friends.get(i).getFirstName() + " " + friends.get(i).getLastName();
-//        s = s + '}';
         return s;
     }
 }
