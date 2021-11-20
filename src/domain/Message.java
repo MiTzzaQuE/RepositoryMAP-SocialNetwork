@@ -10,12 +10,14 @@ public class Message extends Entity<Long> {
     private List<User> to;
     private String message;
     private LocalDateTime date;
+    private Message repliedTo;
 
     public Message(User from, List<User> to, String message, LocalDateTime date) {
         this.from = from;
         this.to = to;
         this.message = message;
         this.date = date;
+        this.repliedTo = null;
     }
 
     public User getFrom() {
@@ -50,6 +52,14 @@ public class Message extends Entity<Long> {
         this.date = date;
     }
 
+    public Message getRepliedTo() {
+        return repliedTo;
+    }
+
+    public void setRepliedTo(Message repliedTo) {
+        this.repliedTo = repliedTo;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
@@ -57,6 +67,7 @@ public class Message extends Entity<Long> {
                 ", to=" + to +
                 ", message='" + message + '\'' +
                 ", date=" + date +
+                ", repliedTo=" + repliedTo +
                 '}';
     }
 
@@ -65,11 +76,21 @@ public class Message extends Entity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message1 = (Message) o;
-        return from.equals(message1.from) && to.equals(message1.to) && message.equals(message1.message) && date.equals(message1.date);
+        return from.equals(message1.from) && to.equals(message1.to) && message.equals(message1.message) && date.equals(message1.date) && repliedTo.equals(message1.repliedTo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to, message, date);
+        return Objects.hash(from, to, message, date, repliedTo);
     }
+
+    /*
+    public String listToString(){
+        String listString = "";
+        for(User user : to){
+            listString = listString + user.getId().toString() + ",";
+        }
+        return listString;
+    }
+    */
 }
