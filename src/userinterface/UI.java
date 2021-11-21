@@ -1,6 +1,7 @@
 package userinterface;
 
 import domain.Entity;
+import domain.User;
 import domain.UserFriendDTO;
 import service.Network;
 import domain.validation.ValidationException;
@@ -18,6 +19,7 @@ import java.util.Scanner;
 public class UI {
     ServiceUser servUser;
     ServiceFriendship servFriendship;
+    private User currentUser = null;  //for log in use
 
     /**
      * constructor for the UI
@@ -26,6 +28,95 @@ public class UI {
     public UI(ServiceUser userService, ServiceFriendship friendshipService) {
         this.servUser = userService;
         this.servFriendship = friendshipService;
+    }
+
+    public void run(){
+        Scanner in = new Scanner(System.in);
+        boolean running = true;
+        while(running){
+            showUserOptions();
+            System.out.println("Enter your option: ");
+            String option = in.nextLine();
+
+            switch (option){
+                case "1" -> {
+                    System.out.println();
+                    System.out.println("Register down below. Please provide: first name, last name");
+                    System.out.println();
+
+                    adduser();
+                }
+                case "2" -> {
+                    while(true){
+                        User loggedUser = login();
+                        if(loggedUser != null){
+                            currentUser = loggedUser;
+                            break;
+                        }
+                        System.out.println("User does not exist!");
+                    }
+                    System.out.println();
+                    System.out.println("Login approved!");
+                    System.out.println();
+
+                    boolean logged = true;
+                    while(logged){
+                        System.out.println("Current logged user: " + currentUser.getId());
+                        System.out.println();
+                        System.out.println("1.Send a friendship request");
+                        System.out.println("2.Show my friendship request");
+                        System.out.println("3.Logout");
+                        System.out.println("\nEnter your option: ");
+
+                        Scanner loggedUserInput = new Scanner(System.in);
+                        String userOption = loggedUserInput.nextLine();
+
+                        if(userOption.equals("1")){
+                            //do the sending friendship stuff
+                        }
+                        if(userOption.equals("2")){
+                            //show the friendship requests for the logged user
+                        }
+                        if(userOption.equals("3")){
+                            //logout
+                            logged = false;
+                        }
+                    }
+                }
+                case "3" -> {
+                    show();
+                }
+                case "4" -> {
+                    System.out.println("Goodbye!");
+                    running = false;
+                }
+                default -> System.out.println("wrong command");
+            }
+        }
+    }
+
+    private void showUserOptions(){
+        System.out.println();
+        System.out.println("1.Register");
+        System.out.println("2.Login");
+        System.out.println("3.Menu");
+        System.out.println("4.Exit");
+        System.out.println();
+    }
+
+    private User login(){
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter ID: ");
+            Long id = Long.parseLong(scanner.nextLine());
+            return servUser.findOne(id);
+        }catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }catch (ValidationException ex){
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 
     /**
