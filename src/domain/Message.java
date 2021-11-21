@@ -12,13 +12,20 @@ public class Message extends Entity<Long> {
     private LocalDateTime date;
     private Message repliedTo;
 
-    public Message(User from, List<User> to, String message, LocalDateTime date) {
+    public Message(User from, List<User> to, String message) {
         this.from = from;
         this.to = to;
         this.message = message;
-        this.date = date;
-        this.repliedTo = null;
+        this.repliedTo=null;
     }
+
+    public Message(User from, List<User> to, String message, Message reply) {
+        this.from = from;
+        this.to = to;
+        this.message = message;
+        this.repliedTo = reply;
+    }
+
 
     public User getFrom() {
         return from;
