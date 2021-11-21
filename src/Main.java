@@ -28,6 +28,7 @@ public class Main {
         ServiceUser serv = new ServiceUser(repo,repofriends);
         ServiceFriendship servFr = new ServiceFriendship(repo,repofriends);
         UI userinterface = new UI(serv,servFr);
-        userinterface.show();
+        //userinterface.show();
+        userinterface.run();
     }
 }
