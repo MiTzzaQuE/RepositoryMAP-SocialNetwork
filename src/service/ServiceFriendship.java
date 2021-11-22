@@ -89,4 +89,44 @@ public class ServiceFriendship {
     public Iterable<Friendship> printFr() {
         return repoFriends.findAll();
     }
+
+    /**
+     * Updates the state of a friendship
+     * @param id1 - Long
+     * @param id2 - Long
+     * @param state - String
+     */
+    public void update(Long id1, Long id2, String state){
+        Friendship friendship = new Friendship();
+        Tuple tuple = new Tuple(id1, id2);
+        friendship.setId(tuple);
+        friendship.setState(state);
+        Friendship updated = repoFriends.update(friendship);
+        if (updated != null)
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
+                    ": id invalid!");
+    }
+
+    public void acceptFriendship(Long id1, Long id2){
+        Tuple tuple = new Tuple(id1, id2);
+        Friendship friendship = repoFriends.findOne(tuple);
+        if(friendship != null){
+            friendship.setState("Approved");
+        }
+        else
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
+                    ": id invalid!");
+    }
+
+    public void rejectFriendship(Long id1, Long id2){
+        Tuple tuple = new Tuple(id1, id2);
+        Friendship friendship = repoFriends.findOne(tuple);
+        if(friendship != null){
+            friendship.setState("Rejected");
+        }
+        else
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81 " +
+                    ": id invalid!");
+    }
+
 }

@@ -32,7 +32,7 @@ public class UI {
     }
 
     public void run(){
-        login =new Login(servMessage,servUser,this);
+        login =new Login(servMessage,servUser,servFriendship,this);
         login.run();
     }
 

@@ -42,10 +42,12 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
             Long id1 = resultSet.getLong("id1");
             Long id2 = resultSet.getLong("id2");
             LocalDateTime date = resultSet.getTimestamp("date").toLocalDateTime();
+            String state = resultSet.getString("state");
 
             friendship = new Friendship();
             friendship.setId(new Tuple(id1,id2));
             friendship.setDate(date);
+            friendship.setState(state);
             return friendship;
         }
         return null;
@@ -90,10 +92,12 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
                 Long id1 = resultSet.getLong("id1");
                 Long id2 = resultSet.getLong("id2");
                 LocalDateTime date = resultSet.getTimestamp("date").toLocalDateTime();
+                String state = resultSet.getString("state");
 
                 Friendship friendship = new Friendship();
                 friendship.setId(new Tuple(id1,id2));
                 friendship.setDate(date);
+                friendship.setState(state);
                 friendships.add(friendship);
             }
             return friendships;
@@ -123,7 +127,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
             throw new IllegalArgumentException("Entity must not be null");
         }
         validator.validate(friendship);
-        String sql = "INSERT INTO Friendships(id1,id2,date) VALUES (?,?,'"+friendship.getDate().format(formatter)+"')";
+        String sql = "INSERT INTO Friendships(id1,id2,date,state) VALUES (?,?,'"+friendship.getDate().format(formatter)+"','"+friendship.getState()+"')";
         this.executeStatement(friendship,sql);
         return null;
     }
@@ -141,8 +145,32 @@ public class FriendshipDbRepository implements Repository<Tuple<Long,Long>,Frien
         return friendship;
     }
 
+    /**
+     * Updates the state of a friendship
+     */
     @Override
     public Friendship update(Friendship friendship) {
-        return null;
+
+        if(friendship == null)
+            throw new IllegalArgumentException("Entity must not be null");
+        validator.validate(friendship);
+        String sql = "update friendships set state = ? where id1 = ? and id2 = ?";
+        int row_count = 0;
+
+        try(Connection connection = DriverManager.getConnection(url,username,password)) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1,friendship.getState());
+            ps.setLong(2,friendship.getId().getLeft());
+            ps.setLong(3,friendship.getId().getRight());
+
+            row_count = ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        if(row_count > 0)
+            return null;
+        return friendship;
     }
+
 }
