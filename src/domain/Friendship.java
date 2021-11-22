@@ -12,11 +12,14 @@ public class Friendship extends Entity<Tuple<Long,Long>> {
      * LocalDateTime
      */
     private LocalDateTime date;
+    private String state;
 
     /**
      * default constructor for object Friendship
      */
-    public Friendship(){}
+    public Friendship() {
+        this.state = "Pending";
+    }
 
     /**
      *
@@ -31,11 +34,20 @@ public class Friendship extends Entity<Tuple<Long,Long>> {
      * @param Date-LocalDateTime
      */
     public void setDate(LocalDateTime Date){date=Date;}
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return "Friendship{" +getId().getLeft()+" "+getId().getRight()+" "+
-                "date=" + date.format(formatter) +
+                "date=" + date.format(formatter) + "state=" + state +
                 '}';
     }
 
