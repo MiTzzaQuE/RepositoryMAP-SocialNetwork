@@ -45,13 +45,13 @@ public class ServiceMessage {
         Message msg = new Message( from, to, message, null) ;
         msg.setDate(LocalDateTime.now());
 
-//        long id = 0L;
-//        for(Message message1: repoMessage.findAll()){
-//            if(message1.getId() > id)
-//                id = message1.getId();
-//        }
-//        id++;
-//        msg.setId(id);
+        long id = 0L;
+        for(Message message1: repoMessage.findAll()){
+            if(message1.getId() > id)
+                id = message1.getId();
+        }
+        id++;
+        msg.setId(id);
 
         Message save = repoMessage.save(msg);
         if(save != null)
@@ -74,13 +74,13 @@ public class ServiceMessage {
         Message msg = new Message(from ,to, message, replyMessage);
         msg.setDate(LocalDateTime.now());
 
-//        long id = 0L;
-//        for(Message message1: repoMessage.findAll()){
-//            if(message1.getId() > id)
-//                id = message1.getId();
-//        }
-//        id++;
-//        msg.setId(id);
+        long id = 0L;
+        for(Message message1: repoMessage.findAll()){
+            if(message1.getId() > id)
+                id = message1.getId();
+        }
+        id++;
+        msg.setId(id);
 
         Message save = repoMessage.save(msg);
         if( save != null )
