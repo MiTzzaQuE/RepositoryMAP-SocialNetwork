@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
  */
 public class ServiceMessage {
 
-    private Repository<Long, Message> repoMessage;
-    private Repository<Long, User> repoUser;
+    private final Repository<Long, Message> repoMessage;
+    private final Repository<Long, User> repoUser;
 
     /**
      * Constructor for Message Service
@@ -45,12 +45,7 @@ public class ServiceMessage {
         Message msg = new Message( from, to, message, null) ;
         msg.setDate(LocalDateTime.now());
 
-        long id = 0L;
-        for(Message message1: repoMessage.findAll()){
-            if(message1.getId() > id)
-                id = message1.getId();
-        }
-        id++;
+        long id = get_size();
         msg.setId(id);
 
         Message save = repoMessage.save(msg);
@@ -74,12 +69,7 @@ public class ServiceMessage {
         Message msg = new Message(from ,to, message, replyMessage);
         msg.setDate(LocalDateTime.now());
 
-        long id = 0L;
-        for(Message message1: repoMessage.findAll()){
-            if(message1.getId() > id)
-                id = message1.getId();
-        }
-        id++;
+        long id = get_size();
         msg.setId(id);
 
         Message save = repoMessage.save(msg);
@@ -106,7 +96,7 @@ public class ServiceMessage {
      * find the receivers of a reply
      * @param idMessageOld-id of old message
      * @param idMessageNew-id of new message
-     * @returnthe list of users
+     * @return - the list of users
      */
     private List<User> findTo( Long idMessageOld, Long idMessageNew ) {
 
@@ -162,5 +152,19 @@ public class ServiceMessage {
                 conversation.add(msg);
         }
         return conversation;
+    }
+
+    /**
+     * Getter function for biggest id
+     * @return the biggest id+1
+     */
+    private long get_size() {
+        long id = 0L;
+        for (Message message1 : repoMessage.findAll()) {
+            if (message1.getId() > id)
+                id = message1.getId();
+        }
+        id++;
+        return id;
     }
 }

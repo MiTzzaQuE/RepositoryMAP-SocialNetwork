@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.Objects;
+
 /**
  * define a User that extends Entity
  * firstName-String
@@ -67,5 +69,18 @@ public class User extends Entity<Long> {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + "' }" ;
         return s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFirstName(), getLastName());
     }
 }

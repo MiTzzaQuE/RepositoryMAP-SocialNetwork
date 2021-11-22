@@ -139,17 +139,17 @@ public class Message extends Entity<Long> {
 
     @Override
     public String toString() {
-//        if(getRepliedTo()==null)
-//            return from.getFirstName()+" "+from.getLastName()+":"+message;
-//        else
-//            return from.getFirstName()+" "+from.getLastName()+" reply to: "+repliedTo.getMessage()+"with:"+message;
-        return "Message{" +
-                "from=" + from +
-                ", to=" + to +
-                ", message='" + message + '\'' +
-                ", date=" + date +
-                ", repliedTo=" + repliedTo +
-                '}';
+        if(getRepliedTo()==null)
+            return from.getFirstName()+" "+from.getLastName()+" : "+message;
+        else
+            return from.getFirstName()+" "+from.getLastName()+" (reply to: \""+repliedTo.getMessage()+"\") with: "+message;
+//        return "Message{" +
+//                "from=" + from +
+//                ", to=" + to +
+//                ", message='" + message + '\'' +
+//                ", date=" + date +
+//                ", repliedTo=" + repliedTo +
+//                '}';
     }
 
     @Override
