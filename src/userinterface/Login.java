@@ -50,13 +50,11 @@ public class Login {
                     System.out.println("\nRegister down below. Please provide: first name, last name\n");
                     ui.adduser();
                 }
-                case "2" -> {
+                case "2" ->
                     //for log in use
                     userLogin();
-                }
-                case "3" -> {
+                case "3" ->
                     ui.show();
-                }
                 case "x" -> {
                     System.out.println("Goodbye!");
                     running = false;
@@ -68,14 +66,6 @@ public class Login {
 
     private void userLogin() {
 
-//        User currentUser = null;
-//        while(true){
-//            User loggedUser = login();
-//            if(loggedUser != null){
-//                currentUser = loggedUser;
-//                break;
-//            }
-//        }
         currentUser = login();
         if (currentUser == null )
             return;
@@ -92,28 +82,22 @@ public class Login {
             switch (userOption) {
                 case "1" -> {
                     //do the sending friendship stuff
-                    break;
                 }
                 case "2" -> {
                     //show the friendship requests for the logged user
-                    break;
                 }
-                case "3" -> {
+                case "3" ->
                     //add a message
                     addMessage();
-                }
-                case "4" -> {
+                case "4" ->
                     //reply to a message
                     addReply();
-                }
-                case "5" -> {
+                case "5" ->
                     //show conversation
                     showPrivateChat();
-                }
-                case "x" -> {
+                case "x" ->
                     //logout
                     logged = false;
-                }
                 default -> System.out.println("wrong command");
             }
         }
@@ -171,7 +155,7 @@ public class Login {
         List<Long> to = new ArrayList<>();
         System.out.println("Message:");
         String msg = scanner.nextLine();
-        String cmd = "";
+        String cmd;
         while(true){
             System.out.println("Choose a user id\nX-STOP");
             cmd = scanner.nextLine();
@@ -195,10 +179,7 @@ public class Login {
             servMessage.save(currentUser.getId(),to,msg);
             System.out.println("Message sent!");
         }
-        catch (ValidationException exception){
-            System.out.println(exception.getMessage());
-        }
-        catch (IllegalArgumentException exception){
+        catch (ValidationException | IllegalArgumentException exception){
             System.out.println(exception.getMessage());
         }
     }
@@ -208,8 +189,8 @@ public class Login {
      */
     private void addReply(){
         Scanner scanner = new Scanner(System.in);
-        String cmd = "";
-        Long idReply = 0L;
+        String cmd;
+        long idReply;
         System.out.println("Give id of the message");
         cmd = scanner.nextLine();
         try{
@@ -229,10 +210,6 @@ public class Login {
         String id = "";
 
         try{
-//            System.out.println("Id of first user:");
-//            id = scanner.nextLine();
-//            long id1 = Long.parseLong(id);
-//            servUser.findOne(id1);
             System.out.println("Id of second user:");
             id = scanner.nextLine();
             long id2 = Long.parseLong(id);
