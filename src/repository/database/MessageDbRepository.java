@@ -40,7 +40,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
 
 
     @Override
-    public Message findOne(Long id) {
+    public Message findOne( Long id ) {
 
         if(id == null)
             throw new IllegalArgumentException("Id must not be null!");
@@ -78,31 +78,6 @@ public class MessageDbRepository implements Repository<Long, Message> {
             }
         }
         catch (SQLException throwables){
-            throwables.printStackTrace();
-        }
-        return null;
-    }
-
-    private User findOneUser(Long fromId) {
-
-        if(fromId == null)
-            throw new IllegalArgumentException("Id must not be null");
-
-        User user;
-
-        try(Connection connection = DriverManager.getConnection(url,username,password);
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users where users.id = ?")){
-            statement.setInt(1, Math.toIntExact(fromId));
-            ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-
-                user = new User(firstName,lastName);
-                user.setId(fromId);
-                return user;
-            }
-        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return null;
@@ -151,7 +126,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
     }
 
     @Override
-    public Message save(Message entity) {
+    public Message save( Message entity ) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm");
 
         if(entity == null) {
@@ -190,7 +165,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
     }
 
     @Override
-    public Message delete(Long id) {
+    public Message delete( Long id ) {
         if(id == null)
             throw new IllegalArgumentException("ID must not be null!");
         Message messageRemoved = null;
@@ -211,10 +186,45 @@ public class MessageDbRepository implements Repository<Long, Message> {
     }
 
     @Override
-    public Message update(Message entity) {
+    public Message update( Message entity ) {
         return null;
     }
 
+    /**
+     * Function that search one user with a given id
+     * @param fromId - integer, id of user
+     * @return the User with the given id
+     */
+    private User findOneUser( Long fromId ) {
+
+        if(fromId == null)
+            throw new IllegalArgumentException("Id must not be null");
+
+        User user;
+
+        try(Connection connection = DriverManager.getConnection(url,username,password);
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users where users.id = ?")){
+            statement.setInt(1, Math.toIntExact(fromId));
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+
+                user = new User(firstName,lastName);
+                user.setId(fromId);
+                return user;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Find the friends of one user
+     * @param id - integer, user id
+     * @return - list of users
+     */
     private List<User> FindFriends (Long id){
 
         List<User> users = new ArrayList<>();
