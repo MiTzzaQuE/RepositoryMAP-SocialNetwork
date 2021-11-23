@@ -85,19 +85,17 @@ public class Login {
             String userOption = loggedUserInput.nextLine();
 
             switch (userOption) {
-                case "1" -> {
+                case "1" ->
                     //do the sending friendship stuff
                     sendFriendshipRequest();
-                }
                 case "2" -> {
                     //show the friendship requests for the logged user
                     showFriendshipRequests();
                     manageFriendshipRequests();
                 }
-                case "3" -> {
+                case "3" ->
                     //show all the friends for the current logged user
                     showUserLoggedFriends();
-                }
                 case "4" ->
                     //add a message
                     addMessage();
@@ -215,6 +213,9 @@ public class Login {
         catch (NumberFormatException e){
             System.out.println(cmd + " is not a valid id!");
         }
+        catch (ValidationException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void showPrivateChat(){
@@ -246,11 +247,13 @@ public class Login {
     private void sendFriendshipRequest(){
         try{
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Sending friendship request to:");
-            System.out.println("Enter user ID: ");
+            System.out.println("""
+            Sending friendship request to:");
+            Enter user ID you want to add as friend:
+            """);
             Long id = Long.parseLong(scanner.nextLine());
             servFriendship.addFriend(currentUser.getId(),id);
-            System.out.println("Sent the friendship request succesfully!");
+            System.out.println("Friendship request sent successfully!");
 
         }catch (NumberFormatException ex){
             ex.printStackTrace();
@@ -275,36 +278,34 @@ public class Login {
      */
     private void manageFriendshipRequests(){
         Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Do you want to accept/reject your friendship requests?");
-        System.out.println("Type y-for yes or n-for no");
+        System.out.println("""
+        Do you want to accept/reject your friendship requests?
+        Type y-for yes or n-for no
+        """);
         String response = scanner.nextLine();
 
-        switch (response){
-            case "y" -> {
-                for(Friendship friendship : servUser.getFriendshipRequestForUser(currentUser.getId())){
+        switch (response) {
+            case "y":
+                for (Friendship friendship : servUser.getFriendshipRequestForUser(currentUser.getId())) {
                     System.out.println("Request from: " + servUser.findOne(friendship.getId().getLeft()));
                     System.out.println("approve or reject?");
                     String state = scanner.nextLine();
-                    if(state.equals("approve")){
-                        servFriendship.update(friendship.getId().getLeft(),friendship.getId().getRight(),"Approved");
-                        servFriendship.acceptFriendship(friendship.getId().getLeft(),friendship.getId().getRight());
-                    }
-                    else if(state.equals("reject")){
-                        servFriendship.update(friendship.getId().getLeft(),friendship.getId().getRight(),"Rejected");
-                        servFriendship.rejectFriendship(friendship.getId().getLeft(),friendship.getId().getRight());
-                    }
-                    else{
+                    if (state.equals("approve")) {
+                        servFriendship.update(friendship.getId().getLeft(), friendship.getId().getRight(), "Approved");
+                        servFriendship.acceptFriendship(friendship.getId().getLeft(), friendship.getId().getRight());
+                    } else if (state.equals("reject")) {
+                        servFriendship.update(friendship.getId().getLeft(), friendship.getId().getRight(), "Rejected");
+                        servFriendship.rejectFriendship(friendship.getId().getLeft(), friendship.getId().getRight());
+                    } else {
                         System.out.println("Wrong command! Type approve or reject!");
                     }
                 }
-            }
-            case "n" -> {
                 break;
-            }
-            default -> {
+            case "n":
+                break;
+            default:
                 System.out.println("wrong command! Type y or n");
-            }
+                break;
         }
     }
 

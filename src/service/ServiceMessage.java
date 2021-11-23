@@ -37,7 +37,7 @@ public class ServiceMessage {
      * Save one message
      * @param fromId - id of the user that sends the message
      * @param toIds - list of user's ids
-     * @param message -s tring
+     * @param message -string
      */
     public void save( Long fromId, List<Long> toIds, String message ){
 

@@ -1,7 +1,6 @@
 package userinterface;
 
 import domain.Entity;
-import domain.User;
 import domain.UserFriendDTO;
 import service.Network;
 import domain.validation.ValidationException;
