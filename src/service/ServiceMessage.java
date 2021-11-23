@@ -1,5 +1,6 @@
 package service;
 
+import domain.Entity;
 import domain.Message;
 import domain.User;
 import domain.validation.ValidationException;
@@ -7,6 +8,7 @@ import repository.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -62,7 +64,7 @@ public class ServiceMessage {
     public void saveReply( Long fromId, String message, Long reply ){
 
         User from = repoUser.findOne(fromId);
-        List<User> to = new ArrayList<>();
+        List<User> to;
         to = findTo(reply,fromId);
         checkMessageReply(reply,fromId);
         Message replyMessage = repoMessage.findOne(reply);
@@ -143,7 +145,7 @@ public class ServiceMessage {
         repoMessage.findAll().forEach(messages :: add);
         List<Message> sortedMessages = messages
                 .stream()
-                .sorted((x,y) -> x.getId().compareTo(y.getId()))
+                .sorted(Comparator.comparing(Entity::getId))
                 .collect(Collectors.toList());
 
         for(Message msg : sortedMessages){

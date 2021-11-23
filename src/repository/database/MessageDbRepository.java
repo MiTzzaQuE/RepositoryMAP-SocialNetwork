@@ -53,27 +53,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()){
-                Long idm = resultSet.getLong("id");
-                LocalDateTime date = LocalDateTime.ofInstant(resultSet.getTimestamp("datem").toInstant(), ZoneOffset.ofHours(0));
-                Long fromId = resultSet.getLong("fromm");
-                User from = findOneUser(fromId);
-                String to1 = resultSet.getString("tom");
-                List<String> toId = new ArrayList<String>(Arrays.asList(to1.split(" ")));
-                toId.remove(0); // lose the first element because it's a space there from the stream reduce :(
-
-                List<User> to = new ArrayList<>();
-                List<Long> idList = toId.stream()
-                        .map(Long::parseLong)
-                        .collect(Collectors.toList());
-                idList.forEach( x -> to.add(findOneUser(x)) );
-                String message = resultSet.getString("messagem");
-                Long idReply = resultSet.getLong("replym");
-
-                Message reply = this.findOne(idReply);
-                msg = new Message(from,to,message);
-                msg.setId(idm);
-                msg.setDate(date);
-                msg.setRepliedTo(reply);
+                msg = extractMessage(resultSet);
                 return msg;
             }
         }
@@ -87,34 +67,14 @@ public class MessageDbRepository implements Repository<Long, Message> {
     public Iterable<Message> findAll() {
 
         Set<Message> messages = new HashSet<>();
-        Message msg = null;
+        Message msg;
 
         try(Connection connection = DriverManager.getConnection(url,username,password);
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from messages order by datem")){
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                Long idm = resultSet.getLong("id");
-                LocalDateTime date = LocalDateTime.ofInstant(resultSet.getTimestamp("datem").toInstant(), ZoneOffset.ofHours(0));
-                Long fromId = resultSet.getLong("fromm");
-                User from = findOneUser(fromId);
-                String to1 = resultSet.getString("tom");
-                List<String> toId = new ArrayList<String>(Arrays.asList(to1.split(" ")));
-                toId.remove(0); // lose the first element because it's a space there from the stream reduce :(
-
-                List<User> to = new ArrayList<>();
-                List<Long> idList = toId.stream()
-                        .map(Long::parseLong)
-                        .collect(Collectors.toList());
-                idList.forEach( x -> to.add(findOneUser(x)) );
-                String message = resultSet.getString("messagem");
-                Long idReply = resultSet.getLong("replym");
-
-                Message reply = this.findOne(idReply);
-                msg = new Message(from,to,message);
-                msg.setId(idm);
-                msg.setDate(date);
-                msg.setRepliedTo(reply);
+                msg = extractMessage(resultSet);
                 messages.add(msg);
             }
             return messages;
@@ -125,6 +85,39 @@ public class MessageDbRepository implements Repository<Long, Message> {
         return messages;
     }
 
+    /**
+     * Function for extract one entity from Message table
+     * @param resultSet - attribute that contains information from the table
+     * @return - the message from the table
+     */
+    private Message extractMessage(ResultSet resultSet) throws SQLException {
+        Message msg;
+        Long idm = resultSet.getLong("id");
+        LocalDateTime date = resultSet.getTimestamp("datem").toLocalDateTime();
+        Long fromId = resultSet.getLong("fromm");
+        User from = findOneUser(fromId);
+        String to1 = resultSet.getString("tom");
+        List<String> toId = new ArrayList<>(Arrays.asList(to1.split(" ")));
+        toId.remove(0); // lose the first element because it's a space there from the stream reduce :(
+
+        List<User> to = new ArrayList<>();
+        List<Long> idList = toId.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+        idList.forEach( x -> to.add(findOneUser(x)) );
+        String message = resultSet.getString("messagem");
+        Long idReply = resultSet.getLong("replym");
+
+        Message reply = this.findOne(idReply);
+        msg = new Message(from,to,message);
+        msg.setMessage(message);
+        msg.setId(idm);
+        msg.setDate(date);
+        msg.setRepliedTo(reply);
+
+        return msg;
+    }
+
     @Override
     public Message save( Message entity ) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm");
@@ -133,12 +126,10 @@ public class MessageDbRepository implements Repository<Long, Message> {
             throw new IllegalArgumentException("Entity must not be null");
         }
         validator.validate(entity);
-        Message message = null;
-
-        String sql = "insert into messages (fromm, tom, messagem, datem, replym ) values (?,?,?,'"+entity.getDate().format(formatter)+"',?)";
+        Message message;
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement("insert into messages (fromm, tom, messagem, datem, replym ) values (?,?,?,'"+entity.getDate().format(formatter)+"',?)")) {
 
             message = this.findOne(entity.getId());
             if(message != null)
@@ -230,9 +221,10 @@ public class MessageDbRepository implements Repository<Long, Message> {
         List<User> users = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("select id, first_name, last_name, date\n" +
-                     "from users u inner join friendships f on u.id = f.id1 or u.id=f.id2\n" +
-                     "where (f.id1= ? or f.id2 = ? )and u.id!= ?")){
+             PreparedStatement statement = connection.prepareStatement("""
+                     select id, first_name, last_name, date
+                     from users u inner join friendships f on u.id = f.id1 or u.id=f.id2
+                     where (f.id1= ? or f.id2 = ? )and u.id!= ?""")){
             statement.setLong(1, id);
             statement.setLong(2, id);
             statement.setLong(3, id);
@@ -247,6 +239,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
 
                     users.add(user);
                 }
+                return users;
             }
         }
         catch (SQLException throwables){
