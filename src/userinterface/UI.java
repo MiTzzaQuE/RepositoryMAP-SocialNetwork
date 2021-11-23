@@ -1,11 +1,12 @@
 package userinterface;
 
 import domain.Entity;
+import domain.UserFriendDTO;
 import service.Network;
 import domain.validation.ValidationException;
 import service.ServiceFriendship;
+import service.ServiceMessage;
 import service.ServiceUser;
-
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -16,18 +17,26 @@ import java.util.Scanner;
 public class UI {
     ServiceUser servUser;
     ServiceFriendship servFriendship;
+    ServiceMessage servMessage;
+    Login login;
 
     /**
      * constructor for the UI
      * @param userService the service of the application
      */
-    public UI(ServiceUser userService, ServiceFriendship friendshipService) {
+    public UI(ServiceUser userService, ServiceFriendship friendshipService, ServiceMessage messageService) {
         this.servUser = userService;
         this.servFriendship = friendshipService;
+        this.servMessage = messageService;
+    }
+
+    public void run(){
+        login =new Login(servMessage,servUser,servFriendship,this);
+        login.run();
     }
 
     /**
-     * show the menu and keep track of the command
+     * Show the menu and keep track of the command
      */
     public void show() {
         String cmd;
@@ -63,6 +72,7 @@ public class UI {
                 (8)-Print users
                 (9)-Print friendships
                 (10)-Print user friends
+                (11)-Print user friends made on a specific month
                 (x)-Exit""");
     }
 
@@ -82,7 +92,8 @@ public class UI {
             case "7" -> biggest_community();
             case "8" -> printUsers();
             case "9" -> printFriendships();
-            case "10" -> friendsUser();
+            case "10" -> getUserFriendsUI();
+            case "11" -> getUserFriendsByMonthUI();
             default -> System.out.println("wrong command");
         }
     }
@@ -95,7 +106,7 @@ public class UI {
 
                 █▀▀ █▀█ █ █▀▀ █▄░█ █▀▄ █▀ █░█ █ █▀█ █▀
                 █▀░ █▀▄ █ ██▄ █░▀█ █▄▀ ▄█ █▀█ █ █▀▀ ▄█:""");
-        servFriendship.printFr().forEach(x-> System.out.println(x.toString()));
+        servFriendship.printFr().forEach(x-> System.out.println(x.toString() + x.getDate().getMonth()));
     }
 
     /**
@@ -107,6 +118,46 @@ public class UI {
                 █░█ █▀ █▀▀ █▀█ █▀
                 █▄█ ▄█ ██▄ █▀▄ ▄█""");
         servUser.printUs().forEach(x-> System.out.println(x.toString()));
+    }
+
+
+    private void getUserFriendsByMonthUI(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Id of user you want to show its friends:");
+            Long id = Long.parseLong(scanner.nextLine());
+            System.out.println("Give the month when friendship was made: (CAPS LOCK ONLY!)");
+            String month = (scanner.nextLine());
+            if(servUser.findFriendshipsByMonth(id,month) == null)
+                System.out.println("User does not have friendships made on this month!");
+            else
+                for(UserFriendDTO friendDTO : servUser.findFriendshipsByMonth(id,month)){
+                    System.out.println(friendDTO);
+                }
+        } catch (IllegalArgumentException ex){
+            System.out.println("Id must be an integer number!");
+        } catch (ValidationException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /**
+     * read an id and if is valid display all friends of the user with that id
+     * otherwise, catch the exception
+     */
+    private void getUserFriendsUI(){
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Id of user you want to show its friends:");
+            Long id = Long.parseLong(scanner.nextLine());
+            for(UserFriendDTO friendDTO : servUser.getFriendsForUser(id)){
+                System.out.println(friendDTO);
+            }
+        } catch (IllegalArgumentException ex){
+            System.out.println("Id must be an integer number!");
+        } catch (ValidationException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     /**
@@ -189,7 +240,7 @@ public class UI {
      * read two strings and if it s valid save the new user
      * otherwise, catch the exception
      */
-    private void adduser() {
+    protected void adduser() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Write the first name:");
         String first = scanner.nextLine();
@@ -243,28 +294,6 @@ public class UI {
             Entity deletedUser=servUser.delete(nr);
             deletedUser.toString();
             System.out.println("User " + deletedUser + " deleted successfully!");
-        }
-        catch (NumberFormatException e) {
-            System.out.println("Id must be an integer number");
-        }
-        catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * read an id and if is valid display all friends of the user with that id
-     * otherwise, catch the exception
-     */
-    private void friendsUser(){
-        Long nr;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Id of user you want to show its friends:");
-        String id = scanner.nextLine();
-        try {
-            nr = Long.parseLong(id);
-            System.out.println(servUser.findOne(nr).toString() + "\n Friends: ");
-            servUser.getFriends(nr).forEach(x -> System.out.println(x.toString()));
         }
         catch (NumberFormatException e) {
             System.out.println("Id must be an integer number");

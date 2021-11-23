@@ -1,12 +1,13 @@
 package service;
 
-import domain.Entity;
-import domain.Friendship;
-import domain.Tuple;
-import domain.User;
+import domain.*;
 import domain.validation.ValidationException;
 import repository.Repository;
+import utils.Months;
+
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * class Service
@@ -133,4 +134,78 @@ public class ServiceUser {
             throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81" +
                     ": id invalid!");
     }
+
+
+    /**
+     * Function which show friends of an user, with friendship made on a specific mounth
+     * @param id - integer
+     * @param month - String
+     * @return a list of friends
+     */
+    public Iterable<UserFriendDTO> findFriendshipsByMonth(Long id, String month){
+
+        if(repoUser.findOne(id) == null)
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81" +
+                    "ID does not exist!");
+
+        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id))
+                        && friendship.getDate().getMonth().toString().equals(month)
+                        && friendship.getState().equals("Approved"))
+                .map(friendship -> {
+                    User friend;
+                    if (friendship.getId().getLeft().equals(id)){
+                        friend = repoUser.findOne(friendship.getId().getRight());
+                    }
+                    else{
+                        friend = repoUser.findOne(friendship.getId().getLeft());
+                    }
+                    return new UserFriendDTO(friend.getFirstName(),friend.getLastName(),friendship.getDate());
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Function which show friends of an user
+     * @param id - integer, if of a given user
+     * @return a list of friends
+     */
+    public Iterable<UserFriendDTO> getFriendsForUser(Long id){
+
+        if(repoUser.findOne(id) == null)
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81" +
+                    "ID does not exist!");
+
+        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id))
+                        && friendship.getState().equals("Approved"))
+                .map(friendship -> {
+                    User friend;
+                    if(friendship.getId().getLeft().equals(id)){
+                        friend = repoUser.findOne(friendship.getId().getRight());
+                    }
+                    else
+                        friend = repoUser.findOne(friendship.getId().getLeft());
+                    return new UserFriendDTO(friend.getFirstName(),friend.getLastName(),friendship.getDate());
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * Shows all friendship requests for a given user
+     * An user is a recever of a friendship request if he is on the right side of the tuple (id2)
+     * @param id -Long
+     * @return a list with all the friendship requests
+     */
+    public Iterable<Friendship> getFriendshipRequestForUser(Long id) {
+        if(repoUser.findOne(id) == null)
+            throw new ValidationException("\uD83C\uDD74\uD83C\uDD81\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD81" +
+                    "ID does not exist!");
+
+        return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
+                .filter(friendship -> friendship.getId().getRight().equals(id) && friendship.getState().equals("Pending"))
+                .collect(Collectors.toList());
+    }
+
 }
