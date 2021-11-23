@@ -149,7 +149,9 @@ public class ServiceUser {
                     "ID does not exist!");
 
         return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
-                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id)) && friendship.getDate().getMonth().toString().equals(month) && friendship.getState().equals("Approved"))
+                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id))
+                        && friendship.getDate().getMonth().toString().equals(month)
+                        && friendship.getState().equals("Approved"))
                 .map(friendship -> {
                     User friend;
                     if (friendship.getId().getLeft().equals(id)){
@@ -175,7 +177,8 @@ public class ServiceUser {
                     "ID does not exist!");
 
         return StreamSupport.stream(repoFriends.findAll().spliterator(),false)
-                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id)) && friendship.getState().equals("Approved"))
+                .filter(friendship -> (friendship.getId().getLeft().equals(id) || friendship.getId().getRight().equals(id))
+                        && friendship.getState().equals("Approved"))
                 .map(friendship -> {
                     User friend;
                     if(friendship.getId().getLeft().equals(id)){

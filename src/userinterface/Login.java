@@ -248,15 +248,14 @@ public class Login {
         try{
             Scanner scanner = new Scanner(System.in);
             System.out.println("""
-            Sending friendship request to:");
-            Enter user ID you want to add as friend:
-            """);
+            Sending friendship request to
+            Enter user ID you want to add as friend:""");
             Long id = Long.parseLong(scanner.nextLine());
             servFriendship.addFriend(currentUser.getId(),id);
             System.out.println("Friendship request sent successfully!");
 
         }catch (NumberFormatException ex){
-            ex.printStackTrace();
+            System.out.println("Please provide a correct number!");
         }catch (ValidationException ex){
             System.out.println(ex.getMessage());
         }
@@ -268,7 +267,6 @@ public class Login {
     private void showFriendshipRequests(){
         System.out.println("Friendship requests: ");
         for(Friendship friendship : servUser.getFriendshipRequestForUser(currentUser.getId())) {
-           //System.out.println(friendship);
             System.out.println("From: " + servUser.findOne(friendship.getId().getLeft()));
         }
     }
@@ -278,10 +276,14 @@ public class Login {
      */
     private void manageFriendshipRequests(){
         Scanner scanner = new Scanner(System.in);
+        List<Friendship> friendships = (List<Friendship>) servUser.getFriendshipRequestForUser(currentUser.getId());
+        if ( friendships.size()==0 ) {
+            System.out.println("Does not have friend requests!");
+            return;
+        }
         System.out.println("""
         Do you want to accept/reject your friendship requests?
-        Type y-for yes or n-for no
-        """);
+        Type y-for yes or n-for no""");
         String response = scanner.nextLine();
 
         switch (response) {
