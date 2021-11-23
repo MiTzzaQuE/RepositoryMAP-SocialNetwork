@@ -85,10 +85,14 @@ public class MessageDbRepository implements Repository<Long, Message> {
         return messages;
     }
 
+    /**
+     * Function for extract one entity from Message table
+     * @param resultSet - attribute that contains information from the table
+     * @return - the message from the table
+     */
     private Message extractMessage(ResultSet resultSet) throws SQLException {
         Message msg;
         Long idm = resultSet.getLong("id");
-//        LocalDateTime date = LocalDateTime.ofInstant(resultSet.getTimestamp("datem").toInstant(), ZoneOffset.ofHours(0));
         LocalDateTime date = resultSet.getTimestamp("datem").toLocalDateTime();
         Long fromId = resultSet.getLong("fromm");
         User from = findOneUser(fromId);
