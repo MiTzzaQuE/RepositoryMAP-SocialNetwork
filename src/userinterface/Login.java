@@ -69,6 +69,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void userLogin() {
 
         currentUser = login();
@@ -113,6 +116,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void showMenu() {
         System.out.println("Current logged user: "  + currentUser.getFirstName() + " " + currentUser.getLastName());
         System.out.println("""
@@ -218,6 +224,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void showPrivateChat(){
 
         Scanner scanner = new Scanner(System.in);
