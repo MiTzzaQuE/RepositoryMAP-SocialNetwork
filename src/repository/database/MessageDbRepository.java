@@ -94,15 +94,9 @@ public class MessageDbRepository implements Repository<Long, Message> {
         LocalDateTime date = resultSet.getTimestamp("datem").toLocalDateTime();
         Long fromId = resultSet.getLong("fromm");
         User from = findOneUser(fromId);
-        String to1 = resultSet.getString("tom");
-        List<String> toId = new ArrayList<>(Arrays.asList(to1.split(" ")));
-        toId.remove(0); // lose the first element because it's a space there from the stream reduce :(
-
         List<User> to = new ArrayList<>();
-        List<Long> idList = toId.stream()
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-        idList.forEach( x -> to.add(findOneUser(x)) );
+
+        findTo(idm).forEach( x -> to.add(findOneUser(x)) );
         String message = resultSet.getString("messagem");
         Long idReply = resultSet.getLong("replym");
 
@@ -127,24 +121,27 @@ public class MessageDbRepository implements Repository<Long, Message> {
         Message message;
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("insert into messages (fromm, tom, messagem, datem, replym ) values (?,?,?,'"+entity.getDate().format(formatter)+"',?)")) {
+             PreparedStatement ps = connection.prepareStatement("insert into messages (fromm, messagem, datem, replym ) values (?,?,'"+entity.getDate().format(formatter)+"',?)")) {
 
             message = this.findOne(entity.getId());
             if(message != null)
                 return message;
 
             ps.setLong(1, entity.getFrom().getId());
-            String ss = String.valueOf(entity.getTo()
-                    .stream()
-                    .map(x -> x.getId().toString())
-                    .reduce("",(x,y) -> x+" "+y));
 
-            ps.setString(2,ss);
-            ps.setString(3,entity.getMessage());
+            PreparedStatement psChats = connection.prepareStatement("insert into chats (id, tom) values (?,?)");
+
+            for(User user: entity.getTo()) {
+                psChats.setLong(1,entity.getId());
+                psChats.setLong(2,user.getId());
+                psChats.executeUpdate();
+            }
+
+            ps.setString(2,entity.getMessage());
             if(entity.getRepliedTo() != null)
-                ps.setLong(4,entity.getRepliedTo().getId());
+                ps.setLong(3,entity.getRepliedTo().getId());
             else
-                ps.setLong(4,-1L);
+                ps.setLong(3,-1L);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -204,6 +201,33 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 return user;
             }
         } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Function getter for
+     * @param id - integer, id of message
+     * @return the list of users ids
+     */
+    private List<Long> findTo (Long id) {
+
+        List<Long> listTo = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url,username,password);
+            PreparedStatement preparedStatement = connection.prepareStatement("""
+                    select tom from chats 
+                    where id = ?""")){
+            preparedStatement.setLong(1,id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    Long idNew = resultSet.getLong("tom");
+                    listTo.add(idNew);
+                }
+                return listTo;
+            }
+        }
+        catch (SQLException throwables){
             throwables.printStackTrace();
         }
         return null;
