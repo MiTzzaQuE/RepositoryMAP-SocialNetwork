@@ -69,6 +69,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void userLogin() {
 
         currentUser = login();
@@ -113,6 +116,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void showMenu() {
         System.out.println("Current logged user: "  + currentUser.getFirstName() + " " + currentUser.getLastName());
         System.out.println("""
@@ -175,8 +181,6 @@ public class Login {
             try{
                 long id = Long.parseLong(cmd);
                 servUser.findOne(id);
-                if(currentUser.getId() == id)
-                    throw new ValidationException("You cannot send a message to yourself");
                 to.add(id);
             }
             catch (NumberFormatException exception){
@@ -209,6 +213,7 @@ public class Login {
             System.out.println("Message:");
             String msg = scanner.nextLine();
             servMessage.saveReply(currentUser.getId(),msg,idReply);
+            System.out.println("Reply message sent!");
         }
         catch (NumberFormatException e){
             System.out.println(cmd + " is not a valid id!");
@@ -218,6 +223,9 @@ public class Login {
         }
     }
 
+    /**
+     *
+     */
     private void showPrivateChat(){
 
         Scanner scanner = new Scanner(System.in);
